@@ -1,19 +1,126 @@
 <!DOCTYPE html>
-<html>
-    <body>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #021B2B, #05799d);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card{
+            width: 400px;
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+            color: white;
+        }
+
+        h2{
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        button{
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover{
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,114,255,0.4);
+        }
+
+        ul{
+            list-style: none;
+            margin-top: 25px;
+        }
+
+        li{
+            background: rgba(255,255,255,0.15);
+            padding: 14px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            border-left: 5px solid #00c6ff;
+            transition: all 0.3s ease;
+            font-size: 15px;
+        }
+
+        li:hover{
+            transform: translateX(5px);
+            background: rgba(255,255,255,0.22);
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="card">
+
         <h2>Lista Productos</h2>
-        <button onclick="listar()">Consultar</button>
+
+        <button onclick="listar()">
+            Consultar Productos
+        </button>
+
         <ul id="lista"></ul>
-        <script>
-            async function listar(){
+
+    </div>
+
+    <script>
+
+        async function listar(){
+
             let r = await fetch("http://127.0.0.1:5000/productos");
+
             let datos = await r.json();
+
             let lista = document.getElementById("lista");
-            lista.innerHTML="";
-            datos.forEach(p=>{
-                lista.innerHTML += `<li>${p.nombre}</li>`;
+
+            lista.innerHTML = "";
+
+            datos.forEach(p => {
+
+                lista.innerHTML += `
+                    <li>${p.nombre}</li>
+                `;
+
             });
-            }
-        </script>
-    </body>
+
+        }
+
+    </script>
+
+</body>
 </html>
