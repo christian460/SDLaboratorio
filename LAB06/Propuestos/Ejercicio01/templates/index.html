@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGA - Gestión de Estudiantes Premium</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- FontAwesome para iconos modernos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- BARRA DE NAVEGACIÓN -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>SGA | Control de Alumnos</span>
+            </a>
+            <div class="navbar-badge" id="student-count-badge">
+                <i class="fa-solid fa-users"></i>
+                <span>Cargando...</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main class="main-wrapper">
+        
+        <!-- COLUMNA IZQUIERDA: FORMULARIO -->
+        <section class="card-glass" aria-labelledby="form-title-heading">
+            <h2 class="card-title" id="form-title-heading">
+                <i class="fa-solid fa-user-plus" id="form-title-icon"></i>
+                <span id="form-action-title">Registrar Estudiante</span>
+            </h2>
+            
+            <form id="student-form" novalidate>
+                <!-- Input oculto para almacenar el ID del estudiante en modo edición -->
+                <input type="hidden" id="student-id" name="id">
+
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre(s)</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ej. Ana Sofia" required minlength="2">
+                </div>
+
+                <div class="form-group">
+                    <label for="apellido" class="form-label">Apellido(s)</label>
+                    <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Ej. García Torres" required minlength="2">
+                </div>
+
+                <div class="form-group">
+                    <label for="carrera" class="form-label">Carrera Profesional</label>
+                    <input type="text" id="carrera" name="carrera" class="form-control" placeholder="Ej. Ciencia de la Computación" required minlength="3">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edad" class="form-label">Edad</label>
+                        <input type="number" id="edad" name="edad" class="form-control" placeholder="21" required min="1" max="120">
+                    </div>
+                    <div class="form-group">
+                        <label for="correo" class="form-label">Correo Electrónico</label>
+                        <input type="email" id="correo" name="correo" class="form-control" placeholder="nombre@unsa.edu.pe" required>
+                    </div>
+                </div>
+
+                <!-- Botones de control del formulario -->
+                <div class="btn-container">
+                    <button type="submit" id="btn-submit" class="btn btn-success">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>Registrar Estudiante</span>
+                    </button>
+                    <button type="button" id="btn-cancel" class="btn btn-secondary" style="display: none;">
+                        <i class="fa-solid fa-xmark"></i>
+                        <span>Cancelar</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- COLUMNA DERECHA: TABLA DE REGISTROS -->
+        <section class="card-glass" aria-labelledby="registry-title-heading">
+            <h2 class="card-title" id="registry-title-heading">
+                <i class="fa-solid fa-list-columns"></i>
+                <span>Registro de Estudiantes</span>
+            </h2>
+
+            <div class="table-container">
+                <table class="student-table" id="students-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Estudiante</th>
+                            <th>Carrera</th>
+                            <th>Edad</th>
+                            <th>Contacto</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="students-tbody">
+                        <!-- Las filas se insertarán dinámicamente mediante JS -->
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <i class="fa-solid fa-spinner fa-spin"></i> Cargando estudiantes...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- NOTIFICACIONES TOASTS FLOTANTES -->
+    <div class="toast-container" id="toast-container" role="alert" aria-live="polite"></div>
+
+    <!-- MODAL DE CONFIRMACIÓN PERSONALIZADO PARA ELIMINACIÓN -->
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Confirmar Eliminación</span>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar al estudiante <strong id="delete-student-name"></strong>?</p>
+                <p style="margin-top: 0.5rem; font-size: 0.85rem; opacity: 0.8;">Esta acción no se puede deshacer y se borrará del almacenamiento en memoria.</p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-modal-cancel">Cancelar</button>
+                <button type="button" class="btn btn-success btn-sm" id="btn-modal-confirm" style="background: var(--accent-danger);">
+                    <i class="fa-solid fa-trash-can"></i> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIE DE PÁGINA -->
+    <footer>
+        <p>&copy; 2026 Sistema de Gestión Académica (SGA). Desarrollado con Flask y Vanilla JS.</p>
+    </footer>
+
+    <!-- Lógica de control en JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
