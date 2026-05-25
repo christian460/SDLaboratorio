@@ -27,7 +27,7 @@ public class CalculatorServer {
         System.out.println(" Esperando conexiones...");
         System.out.println("========================================");
 
-        // Hook para apagar el servidor limpiamente con Ctrl+C
+        // para apagar el servidor limpiamente con Ctrl+C
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("\n[Servidor] Apagando servidor...");
             server.shutdown();

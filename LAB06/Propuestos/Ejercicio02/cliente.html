@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Biblioteca RESTful</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ffffff;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .subtitulo {
+      text-align: center;
+      color: rgba(255,255,255,0.5);
+      font-size: 13px;
+      margin-bottom: 35px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.10);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 16px;
+      padding: 28px;
+      color: white;
+    }
+
+    .card.full {
+      grid-column: 1 / -1;
+    }
+
+    .card h2 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .metodo {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .get    { background: #00b894; }
+    .post   { background: #0984e3; }
+    .delete { background: #d63031; }
+
+    .endpoint {
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      font-family: monospace;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      color: white;
+      font-size: 14px;
+      margin-bottom: 10px;
+      outline: none;
+      transition: border 0.2s;
+    }
+    input::placeholder { color: rgba(255,255,255,0.4); }
+    input:focus { border-color: rgba(255,255,255,0.5); }
+
+    button {
+      width: 100%;
+      padding: 11px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      color: white;
+      transition: all 0.3s ease;
+    }
+    button:hover { transform: translateY(-2px); opacity: 0.88; }
+
+    .btn-get    { background: linear-gradient(135deg, #00b894, #00cec9); }
+    .btn-post   { background: linear-gradient(135deg, #0984e3, #74b9ff); }
+    .btn-delete { background: linear-gradient(135deg, #d63031, #ff7675); }
+
+    .respuesta {
+      margin-top: 12px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 10px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 12px;
+      color: rgba(255,255,255,0.85);
+      min-height: 40px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    ul {
+      list-style: none;
+      margin-top: 14px;
+    }
+
+    ul li {
+      background: rgba(255,255,255,0.10);
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      border-radius: 10px;
+      border-left: 4px solid #00b894;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    ul li:hover {
+      background: rgba(255,255,255,0.18);
+      transform: translateX(4px);
+    }
+
+    ul li span.id {
+      color: rgba(255,255,255,0.45);
+      font-size: 12px;
+      margin-right: 8px;
+    }
+
+    .empty {
+      color: rgba(255,255,255,0.35);
+      font-size: 13px;
+      text-align: center;
+      padding: 12px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Biblioteca RESTful</h1>
+  <p class="subtitulo">Cliente HTML — API Java + Spring Boot en http://localhost:8080</p>
+
+  <div class="grid">
+
+    <!-- Listar libros -->
+    <div class="card full">
+      <h2><span class="metodo get">GET</span> Listar libros</h2>
+      <span class="endpoint">GET /libros</span>
+      <button class="btn-get" onclick="listar()">Consultar Libros</button>
+      <ul id="lista"><li class="empty">Presiona "Consultar Libros" para cargar</li></ul>
+    </div>
+
+    <!-- Registrar libro -->
+    <div class="card">
+      <h2><span class="metodo post">POST</span> Registrar libro</h2>
+      <span class="endpoint">POST /libros</span>
+      <input type="text"   id="titulo" placeholder="Titulo *" />
+      <input type="text"   id="autor"  placeholder="Autor *" />
+      <input type="number" id="anio"   placeholder="Año (opcional)" />
+      <button class="btn-post" onclick="agregar()">Registrar</button>
+      <div class="respuesta" id="resp-agregar"></div>
+    </div>
+
+    <!-- Buscar por ID -->
+    <div class="card">
+      <h2><span class="metodo get">GET</span> Buscar por ID</h2>
+      <span class="endpoint">GET /libros/{id}</span>
+      <input type="number" id="buscar-id" placeholder="ID del libro (ej: 1)" min="1" />
+      <button class="btn-get" onclick="buscar()">Buscar</button>
+      <div class="respuesta" id="resp-buscar"></div>
+    </div>
+
+    <!-- Eliminar libro -->
+    <div class="card full">
+      <h2><span class="metodo delete">DELETE</span> Eliminar libro</h2>
+      <span class="endpoint">DELETE /libros/{id}</span>
+      <input type="number" id="eliminar-id" placeholder="ID del libro a eliminar" min="1" style="max-width:300px;" />
+      <button class="btn-delete" style="max-width:300px;" onclick="eliminar()">Eliminar</button>
+      <div class="respuesta" id="resp-eliminar"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const BASE = "http://localhost:8080";
+
+    async function listar() {
+      try {
+        let r = await fetch(BASE + "/libros");
+        let datos = await r.json();
+        let lista = document.getElementById("lista");
+        lista.innerHTML = "";
+        if (datos.length === 0) {
+          lista.innerHTML = '<li class="empty">No hay libros registrados</li>';
+          return;
+        }
+        datos.forEach(l => {
+          lista.innerHTML += `<li>
+            <span class="id">#${l.id}</span>
+            <strong>${l.titulo}</strong> &mdash; ${l.autor}
+            ${l.anio ? `<span class="id">(${l.anio})</span>` : ""}
+          </li>`;
+        });
+      } catch(e) {
+        document.getElementById("lista").innerHTML =
+          '<li class="empty">Error al conectar con el servidor</li>';
+      }
+    }
+
+    async function agregar() {
+      let titulo = document.getElementById("titulo").value.trim();
+      let autor  = document.getElementById("autor").value.trim();
+      let anio   = parseInt(document.getElementById("anio").value) || 0;
+      if (!titulo || !autor) { alert("Titulo y Autor son obligatorios."); return; }
+      try {
+        let r = await fetch(BASE + "/libros", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ titulo, autor, anio })
+        });
+        let data = await r.json();
+        document.getElementById("resp-agregar").textContent = JSON.stringify(data, null, 2);
+        if (r.ok) {
+          document.getElementById("titulo").value = "";
+          document.getElementById("autor").value  = "";
+          document.getElementById("anio").value   = "";
+          listar();
+        }
+      } catch(e) {
+        document.getElementById("resp-agregar").textContent = "Error: " + e.message;
+      }
+    }
+
+    async function buscar() {
+      let id = document.getElementById("buscar-id").value;
+      if (!id) { alert("Ingresa un ID"); return; }
+      try {
+        let r = await fetch(BASE + "/libros/" + id);
+        let data = await r.json();
+        document.getElementById("resp-buscar").textContent = JSON.stringify(data, null, 2);
+      } catch(e) {
+        document.getElementById("resp-buscar").textContent = "Error: " + e.message;
+      }
+    }
+
+    async function eliminar() {
+      let id = document.getElementById("eliminar-id").value;
+      if (!id) { alert("Ingresa un ID"); return; }
+      try {
+        let r = await fetch(BASE + "/libros/" + id, { method: "DELETE" });
+        let data = await r.json();
+        document.getElementById("resp-eliminar").textContent = JSON.stringify(data, null, 2);
+        if (r.ok) listar();
+      } catch(e) {
+        document.getElementById("resp-eliminar").textContent = "Error: " + e.message;
+      }
+    }
+
+    listar();
+  </script>
+
+</body>
+</html>
