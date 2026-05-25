@@ -4,19 +4,15 @@ import io.grpc.stub.StreamObserver;
 import grpc_calculator.CalculatorProto.Request;
 import grpc_calculator.CalculatorProto.Response;
 
-/**
- * Implementación del servicio Calculator definido en calculator.proto.
- * Extiende la clase base generada por el compilador de Protocol Buffers.
- */
+
+ //Implementación del servicio Calculator definido en calculator.proto.
+ //Extiende la clase base generada por el compilador de Protocol Buffers.
+
 public class CalculatorServiceImpl extends CalculatorGrpc.CalculatorImplBase {
 
-    /**
-     * Método Sum: recibe dos enteros (a, b) y retorna su suma.
-     * Este es el ejercicio resuelto por el docente.
-     *
-     * @param req              Request con los valores a y b
-     * @param responseObserver Observer para enviar la respuesta al cliente
-     */
+     //Método Sum: recibe dos enteros (a, b) y retorna su suma.
+    //Este es el ejercicio resuelto por el docente.
+    
     @Override
     public void sum(Request req, StreamObserver<Response> responseObserver) {
         System.out.println("[Servidor] Solicitud recibida: a=" + req.getA() + ", b=" + req.getB());

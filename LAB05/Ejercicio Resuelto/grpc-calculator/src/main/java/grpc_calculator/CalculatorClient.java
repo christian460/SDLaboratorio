@@ -5,18 +5,18 @@ import io.grpc.ManagedChannelBuilder;
 import grpc_calculator.CalculatorProto.Request;
 import grpc_calculator.CalculatorProto.Response;
 
-/**
- * Cliente gRPC para la Calculadora Distribuida.
- * Conecta al servidor en localhost:50051 y realiza una llamada Sum.
- *
- * Código del docente (ejercicio resuelto - Lab 05):
- *   a=8, b=4 → Resultado esperado: 12
- */
+
+ //Cliente gRPC para la Calculadora Distribuida.
+ //Conecta al servidor en localhost:50051 y realiza una llamada Sum.
+
+ //Código del docente (ejercicio resuelto - Lab 05):
+ //a=8, b=4 → Resultado esperado: 12
+ 
 public class CalculatorClient {
 
     public static void main(String[] args) throws InterruptedException {
 
-        // --- Código del docente (conservado tal cual) ---
+        
 
         ManagedChannel channel = ManagedChannelBuilder
                 .forAddress("localhost", 50051)
@@ -37,6 +37,6 @@ public class CalculatorClient {
 
         channel.shutdown();
 
-        // --- Fin código del docente ---
+        
     }
 }
