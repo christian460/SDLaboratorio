@@ -11,7 +11,7 @@ import grpc_calculator.CalculatorProto.Response;
 public class CalculatorServiceImpl extends CalculatorGrpc.CalculatorImplBase {
 
      //Método Sum: recibe dos enteros (a, b) y retorna su suma.
-    //Este es el ejercicio resuelto por el docente.
+
     
     @Override
     public void sum(Request req, StreamObserver<Response> responseObserver) {
