@@ -8,8 +8,6 @@ import grpc_calculator.CalculatorProto.Response;
 
  //Cliente gRPC para la Calculadora Distribuida.
  //Conecta al servidor en localhost:50051 y realiza una llamada Sum.
-
- //Código del docente (ejercicio resuelto - Lab 05):
  //a=8, b=4 → Resultado esperado: 12
  
 public class CalculatorClient {
