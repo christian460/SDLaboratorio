@@ -12,7 +12,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/libros")
 @CrossOrigin(origins = "*")
-public class LibroController {
+public class LibroController { 
 
     // Almacenamiento en memoria (lista de mapas) con datos de prueba iniciales
     private final List<Map<String, Object>> libros = new ArrayList<>();

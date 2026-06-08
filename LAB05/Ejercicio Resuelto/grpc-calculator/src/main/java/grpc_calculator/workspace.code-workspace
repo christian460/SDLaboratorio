@@ -1,0 +1,9 @@
+{
+	"folders": [],
+	"settings": {
+		"java.debug.settings.onBuildFailureProceed": true,
+		"java.project.sourcePaths": [
+			"SDLaboratorio1-master/Propuesto"
+		]
+	}
+}
