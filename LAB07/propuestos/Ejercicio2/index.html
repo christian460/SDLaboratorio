@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cliente SOAP con JavaScript</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 2rem auto; line-height: 1.5; }
+    textarea, input, button { width: 100%; margin: 0.5rem 0; padding: 0.75rem; }
+    pre { background: #f4f4f4; padding: 1rem; overflow: auto; }
+  </style>
+</head>
+<body>
+  <h1>Prueba de SOAP desde el navegador</h1>
+  <p>
+    Este ejemplo construye un sobre SOAP manualmente. En un navegador real puede fallar por CORS
+    y por las restricciones de seguridad del origen.
+  </p>
+
+  <label for="a">Operando A</label>
+  <input id="a" type="number" value="5" />
+
+  <label for="b">Operando B</label>
+  <input id="b" type="number" value="8" />
+
+  <label for="operacion">Operación</label>
+  <select id="operacion">
+    <option value="Add">Add</option>
+    <option value="Subtract">Subtract</option>
+    <option value="Multiply">Multiply</option>
+    <option value="Divide">Divide</option>
+  </select>
+
+  <button id="enviar">Consumir servicio SOAP</button>
+
+  <h2>Respuesta</h2>
+  <pre id="resultado">Esperando ejecución...</pre>
+
+  <script>
+    const endpoint = "http://127.0.0.1:8000/";
+
+    function construirEnvelope(operacion, a, b) {
+      return `<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+               xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <${operacion} xmlns="http://tempuri.org/">
+      <intA>${a}</intA>
+      <intB>${b}</intB>
+    </${operacion}>
+  </soap:Body>
+</soap:Envelope>`;
+    }
+
+    document.getElementById("enviar").addEventListener("click", async () => {
+      const operacion = document.getElementById("operacion").value;
+      const a = document.getElementById("a").value;
+      const b = document.getElementById("b").value;
+      const soapAction = `http://tempuri.org/${operacion}`;
+      const envelope = construirEnvelope(operacion, a, b);
+
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": soapAction
+          },
+          body: envelope
+        });
+
+        const text = await response.text();
+        document.getElementById("resultado").textContent = text;
+      } catch (error) {
+        document.getElementById("resultado").textContent =
+          "Error al consumir SOAP desde el navegador: " + error.message;
+      }
+    });
+  </script>
+</body>
+</html>
