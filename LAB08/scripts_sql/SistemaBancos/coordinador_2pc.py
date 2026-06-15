@@ -7,8 +7,17 @@ nodos = {"Arequipa": AREQUIPA, "Cusco": CUSCO, "Trujillo": TRUJILLO}
 
 def estado():
     for nombre, url in nodos.items():
-        s = requests.get(f"{url}/saldo").json()["saldo"]
-        print(f"  {nombre}: S/ {s}")
+        try:
+            res = requests.get(f"{url}/saldo")
+            res.raise_for_status()
+            s = res.json()["saldo"]
+            print(f"  {nombre}: S/ {s}")
+        except requests.exceptions.HTTPError:
+            print(f"  {nombre}: ERROR (HTTP {res.status_code}): {res.text.strip()}")
+        except requests.exceptions.RequestException as e:
+            print(f"  {nombre}: ERROR de conexión ({e})")
+        except (ValueError, KeyError) as e:
+            print(f"  {nombre}: ERROR de decodificación JSON ({e}) | Respuesta: {res.text.strip() if 'res' in locals() else ''}")
 
 def reset():
     requests.post(f"{AREQUIPA}/set", json={"saldo": 1000})

@@ -6,7 +6,8 @@ app = FastAPI()
 def get_db():
     return psycopg2.connect(
         dbname="banco_trujillo", user="postgres",
-        password="postgres", host="127.0.0.1", port="5432"
+        password="admin", host="127.0.0.1", port="5432",
+        options="-c client_encoding=WIN1252"
     )
 
 @app.get("/saldo")
