@@ -1,0 +1,56 @@
+version: "3.8"
+
+# Entorno base de microservicios mock para LogiFresh S.A.
+# Levanta los 5 servicios en puertos distintos para que el equipo de QA
+# pueda ejecutar pruebas funcionales, de integración y de carga (JMeter/k6).
+
+services:
+
+  pedidos-service:
+    build:
+      context: ./pedidos-service
+    container_name: logifresh-pedidos
+    ports:
+      - "8081:8081"
+    networks:
+      - logifresh-net
+
+  inventario-service:
+    build:
+      context: ./inventario-service
+    container_name: logifresh-inventario
+    ports:
+      - "8082:8082"
+    networks:
+      - logifresh-net
+
+  facturacion-service:
+    build:
+      context: ./facturacion-service
+    container_name: logifresh-facturacion
+    ports:
+      - "8083:8083"
+    networks:
+      - logifresh-net
+
+  transporte-service:
+    build:
+      context: ./transporte-service
+    container_name: logifresh-transporte
+    ports:
+      - "8084:8084"
+    networks:
+      - logifresh-net
+
+  notificaciones-service:
+    build:
+      context: ./notificaciones-service
+    container_name: logifresh-notificaciones
+    ports:
+      - "8085:8085"
+    networks:
+      - logifresh-net
+
+networks:
+  logifresh-net:
+    driver: bridge
